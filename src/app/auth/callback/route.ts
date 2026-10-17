@@ -14,7 +14,7 @@ export async function GET(request: Request) {
       if (!error && data.user) {
         await supabase
           .from("profiles")
-          .update({ is_email_verified: true })
+          .update({ email_verified: true })
           .eq("id", data.user.id);
 
         return NextResponse.redirect(`${origin}${safeNext}`);
