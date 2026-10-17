@@ -14,7 +14,10 @@ export function createSupabaseAdminClient() {
   }
 
   const config = getSupabaseConfigStatus();
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  const serviceRoleKey = (
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.SUPABASE_SECRET_KEY
+  )?.trim();
 
   if (!config.isConfigured || !config.hasServiceRole || !serviceRoleKey) {
     return null;
