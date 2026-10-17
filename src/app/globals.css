@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-ivory: #FAF7F1;
+    --color-white: #FFFFFF;
+    --color-sand: #EEE5D8;
+    --color-sage: #879783;
+    --color-forest: #30483A;
+    --color-terracotta: #C77D61;
+    --color-charcoal: #302F2B;
+    --color-muted: #77756D;
+    --color-border: #E7E0D5;
+    --font-serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, Cambria, "Times New Roman", serif;
+    --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  html {
+    background-color: #FAF7F1;
+    color: #302F2B;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #FAF7F1;
+    color: #302F2B;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer utilities {
+  .orbital-ring {
+    border: 1px dashed rgba(135, 151, 131, 0.35);
+  }
+}
