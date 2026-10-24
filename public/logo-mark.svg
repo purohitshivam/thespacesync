@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80" fill="none">
+  <!-- Forest Green Orbital Circle -->
+  <circle cx="38" cy="42" r="34" fill="#30483A" />
+  <!-- Warm Ivory Editorial Serif 'S' -->
+  <text
+    x="38"
+    y="54"
+    text-anchor="middle"
+    fill="#FAF7F1"
+    font-family="'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif"
+    font-size="38"
+    font-weight="600"
+  >S</text>
+  <!-- Terracotta Orbital Satellite Dot with Warm Ivory Cutout Border -->
+  <circle cx="64" cy="16" r="9" fill="#C77D61" stroke="#FAF7F1" stroke-width="3" />
+</svg>

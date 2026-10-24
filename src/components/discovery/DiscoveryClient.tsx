@@ -23,6 +23,9 @@ import {
   Lock,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
+  ChevronUp,
+  Search,
   ArrowUpRight,
 } from "lucide-react";
 
@@ -67,6 +70,21 @@ export function DiscoveryClient({
   const [sortBy, setSortBy] = useState<"peace_score" | "recent">(
     initialFilters.sortBy || "peace_score"
   );
+  const [showAllFilters, setShowAllFilters] = useState(false);
+
+  const activeFilterCount = [
+    city !== "all",
+    Boolean(area),
+    Boolean(maxBudget),
+    movingTimeline !== "all",
+    sleepSchedule !== "all",
+    cleanlinessLevel !== "all",
+    smokingPreference !== "all",
+    dietaryPreference !== "all",
+    petPreference !== "all",
+    workStudyRoutine !== "all",
+    guestsOvernight !== "all",
+  ].filter(Boolean).length;
 
   function applyFilters(targetPage = 1) {
     const params = new URLSearchParams();
@@ -155,258 +173,322 @@ export function DiscoveryClient({
         </div>
       )}
 
-      {/* Filter Bar */}
+      {/* Filter Bar (Modern Pill & Drawer Design) */}
       <div
-        className="bg-white border border-border rounded-3xl p-6 shadow-warm space-y-5"
+        className="bg-white border border-border rounded-3xl p-5 sm:p-6 shadow-warm space-y-4"
         data-testid="discovery-filters"
       >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-sm font-semibold text-charcoal">
-            <SlidersHorizontal className="w-4 h-4 text-forest" />
-            <span>Filter by Living Habits & Location</span>
+        {/* City Filter Pills */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border/70">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+            <span className="text-xs font-semibold text-charcoal shrink-0 mr-1 flex items-center gap-1">
+              <MapPin className="w-3.5 h-3.5 text-forest" />
+              City:
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                setCity("all");
+              }}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium shrink-0 transition ${
+                city === "all"
+                  ? "bg-forest text-ivory font-semibold shadow-xs"
+                  : "bg-ivory border border-border text-charcoal hover:bg-sand"
+              }`}
+            >
+              All Cities
+            </button>
+            {PRIMARY_CITIES.map((c) => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => {
+                  setCity(c);
+                }}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium shrink-0 transition ${
+                  city === c
+                    ? "bg-forest text-ivory font-semibold shadow-xs"
+                    : "bg-ivory border border-border text-charcoal hover:bg-sand"
+                }`}
+              >
+                {c}
+              </button>
+            ))}
           </div>
+
           <button
             type="button"
             onClick={resetFilters}
-            className="text-xs font-medium text-muted hover:text-charcoal underline"
+            className="text-xs font-medium text-muted hover:text-charcoal underline self-end sm:self-auto shrink-0"
           >
-            Reset all filters
+            Reset all
           </button>
         </div>
 
-        {/* Core Free Filters */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-          <div>
-            <label htmlFor="filter-city" className="block text-xs font-medium text-charcoal mb-1">
-              City
-            </label>
-            <select
-              id="filter-city"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-border bg-ivory text-xs text-charcoal"
-            >
-              <option value="all">All Cities</option>
-              {PRIMARY_CITIES.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="filter-area" className="block text-xs font-medium text-charcoal mb-1">
-              Preferred Neighbourhood
-            </label>
+        {/* Primary Search Controls Bar */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-center">
+          {/* Preferred Neighbourhood */}
+          <div className="lg:col-span-4 relative">
+            <MapPin className="w-3.5 h-3.5 text-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               id="filter-area"
               type="text"
               value={area}
               onChange={(e) => setArea(e.target.value)}
-              placeholder="e.g. Indiranagar, Bandra, Cyber City"
-              className="w-full px-3 py-2 rounded-xl border border-border bg-ivory text-xs text-charcoal"
+              placeholder="Neighbourhood (e.g. Indiranagar, Bandra)"
+              className="w-full pl-9 pr-3.5 py-2.5 rounded-2xl border border-border bg-ivory text-xs text-charcoal focus:outline-hidden focus:border-forest"
             />
           </div>
 
-          <div>
-            <label htmlFor="filter-budget" className="block text-xs font-medium text-charcoal mb-1">
-              Max Monthly Budget (₹)
-            </label>
+          {/* Max Budget */}
+          <div className="lg:col-span-3">
             <input
               id="filter-budget"
               type="number"
               step={1000}
               value={maxBudget}
               onChange={(e) => setMaxBudget(e.target.value)}
-              placeholder="e.g. 30000"
-              className="w-full px-3 py-2 rounded-xl border border-border bg-ivory text-xs text-charcoal"
+              placeholder="Max Budget (₹/mo)"
+              className="w-full px-3.5 py-2.5 rounded-2xl border border-border bg-ivory text-xs text-charcoal focus:outline-hidden focus:border-forest"
             />
           </div>
 
-          <div>
-            <label htmlFor="filter-timeline" className="block text-xs font-medium text-charcoal mb-1">
-              Moving Timeline
-            </label>
-            <select
-              id="filter-timeline"
-              value={movingTimeline}
-              onChange={(e) => setMovingTimeline(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-border bg-ivory text-xs text-charcoal"
-            >
-              <option value="all">Any Timeline</option>
-              {MOVING_TIMELINE_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="filter-sleep" className="block text-xs font-medium text-charcoal mb-1">
-              Sleep Schedule
-            </label>
-            <select
-              id="filter-sleep"
-              value={sleepSchedule}
-              onChange={(e) => setSleepSchedule(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-border bg-ivory text-xs text-charcoal"
-            >
-              <option value="all">Any Sleep Schedule</option>
-              <option value="early_bird">Early bird</option>
-              <option value="balanced">Balanced</option>
-              <option value="night_owl">Night owl</option>
-              <option value="flexible_shift">Flexible</option>
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="filter-cleanliness" className="block text-xs font-medium text-charcoal mb-1">
-              Cleanliness Preference
-            </label>
-            <select
-              id="filter-cleanliness"
-              value={cleanlinessLevel}
-              onChange={(e) => setCleanlinessLevel(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-border bg-ivory text-xs text-charcoal"
-            >
-              <option value="all">Any Cleanliness Level</option>
-              <option value="spotless">Spotless daily</option>
-              <option value="tidy_shared_spaces">Tidy shared spaces</option>
-              <option value="weekly_deep_clean">Weekly deep clean</option>
-              <option value="relaxed">Relaxed</option>
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="filter-smoking" className="block text-xs font-medium text-charcoal mb-1">
-              Smoking Preference
-            </label>
-            <select
-              id="filter-smoking"
-              value={smokingPreference}
-              onChange={(e) => setSmokingPreference(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-border bg-ivory text-xs text-charcoal"
-            >
-              <option value="all">Any Smoking Preference</option>
-              <option value="never">Strictly smoke-free</option>
-              <option value="outside_only">Outdoors / balcony only</option>
-              <option value="tolerant">Comfortable around smokers</option>
-              <option value="occasionally_indoors">Occasional indoor smoker</option>
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="filter-sort" className="block text-xs font-medium text-charcoal mb-1">
-              Sort Order
-            </label>
+          {/* Sort Order */}
+          <div className="lg:col-span-2">
             <select
               id="filter-sort"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as "peace_score" | "recent")}
-              className="w-full px-3 py-2 rounded-xl border border-border bg-ivory text-xs text-charcoal"
+              className="w-full px-3 py-2.5 rounded-2xl border border-border bg-ivory text-xs text-charcoal focus:outline-hidden focus:border-forest"
             >
-              <option value="peace_score">Highest Peace Score First</option>
+              <option value="peace_score">Highest Peace Score</option>
               <option value="recent">Recently Active</option>
             </select>
           </div>
-        </div>
 
-        {/* Premium Advanced Filters */}
-        <div className="pt-4 border-t border-border space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-forest">
-              <Sparkles className="w-3.5 h-3.5 text-terracotta" />
-              Premium Advanced Filters (Kitchen Diet, Pets, WFH Routine, Guests)
-            </span>
-            {!data.isPremiumViewer && (
-              <Link
-                href="/pricing"
-                className="inline-flex items-center gap-1 text-xs font-semibold text-terracotta-dark hover:underline"
-              >
-                <Lock className="w-3 h-3" />
-                Unlock with Premium (₹199/mo)
-              </Link>
-            )}
-          </div>
+          {/* More Filters Toggle & Search Button */}
+          <div className="lg:col-span-3 flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setShowAllFilters((prev) => !prev)}
+              className={`flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-3.5 rounded-2xl border text-xs font-semibold transition ${
+                showAllFilters || activeFilterCount > 1
+                  ? "border-forest bg-sand text-forest shadow-xs"
+                  : "border-border bg-ivory text-charcoal hover:bg-sand/60"
+              }`}
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5" />
+              <span>Habits & Rules</span>
+              {activeFilterCount > 0 && (
+                <span className="w-4 h-4 rounded-full bg-forest text-ivory text-[10px] flex items-center justify-center ml-0.5">
+                  {activeFilterCount}
+                </span>
+              )}
+              {showAllFilters ? (
+                <ChevronUp className="w-3.5 h-3.5 ml-auto" />
+              ) : (
+                <ChevronDown className="w-3.5 h-3.5 ml-auto" />
+              )}
+            </button>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-            <div>
-              <label className="block text-[11px] text-muted mb-1">Kitchen Dietary Rule</label>
-              <select
-                disabled={!data.isPremiumViewer}
-                value={dietaryPreference}
-                onChange={(e) => setDietaryPreference(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-border bg-ivory disabled:opacity-50 text-xs text-charcoal"
-              >
-                <option value="all">Any Dietary Kitchen</option>
-                <option value="strict_veg_kitchen">Strictly vegetarian kitchen</option>
-                <option value="veg_preferred_flexible">Vegetarian (flexible kitchen)</option>
-                <option value="non_veg_comfortable">Open / non-veg comfortable</option>
-                <option value="vegan">Plant-based / vegan</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-[11px] text-muted mb-1">Pet Preference</label>
-              <select
-                disabled={!data.isPremiumViewer}
-                value={petPreference}
-                onChange={(e) => setPetPreference(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-border bg-ivory disabled:opacity-50 text-xs text-charcoal"
-              >
-                <option value="all">Any Pet Preference</option>
-                <option value="no_pets">Pet-free home</option>
-                <option value="love_pets_dont_own">Loves pets</option>
-                <option value="have_pets">Has a pet</option>
-                <option value="allergic">Pet allergy (strictly no pets)</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-[11px] text-muted mb-1">Work / Study Routine</label>
-              <select
-                disabled={!data.isPremiumViewer}
-                value={workStudyRoutine}
-                onChange={(e) => setWorkStudyRoutine(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-border bg-ivory disabled:opacity-50 text-xs text-charcoal"
-              >
-                <option value="all">Any Work Routine</option>
-                <option value="mostly_office_campus">At office / campus</option>
-                <option value="hybrid">Hybrid (2–3 days WFH)</option>
-                <option value="mostly_from_home">Mostly WFH</option>
-                <option value="late_study_hours">Late study hours</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-[11px] text-muted mb-1">Overnight Guests</label>
-              <select
-                disabled={!data.isPremiumViewer}
-                value={guestsOvernight}
-                onChange={(e) => setGuestsOvernight(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-border bg-ivory disabled:opacity-50 text-xs text-charcoal"
-              >
-                <option value="all">Any Guest Policy</option>
-                <option value="rarely">Rarely hosts</option>
-                <option value="occasional_with_notice">Occasional with notice</option>
-                <option value="weekends_welcome">Weekends welcome</option>
-                <option value="anytime_open">Open-door social</option>
-              </select>
-            </div>
+            <button
+              type="button"
+              onClick={() => applyFilters(1)}
+              className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-2xl bg-forest hover:bg-forest-light text-ivory text-xs font-semibold shadow-xs transition shrink-0"
+            >
+              <Search className="w-3.5 h-3.5" />
+              <span>Search</span>
+            </button>
           </div>
         </div>
 
-        <div className="pt-2 flex justify-end">
-          <button
-            type="button"
-            onClick={() => applyFilters(1)}
-            className="px-6 py-2.5 rounded-full bg-forest hover:bg-forest-light text-ivory text-xs font-semibold transition"
-          >
-            Apply Filters
-          </button>
-        </div>
+        {/* Collapsible Living Boundaries & Premium Filters Drawer */}
+        {showAllFilters && (
+          <div className="pt-4 border-t border-border space-y-5 animate-fade-in">
+            {/* Core Boundaries */}
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted block mb-3">
+                Core Living Boundaries
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+                <div>
+                  <label htmlFor="filter-timeline" className="block text-[11px] font-medium text-charcoal mb-1">
+                    Moving Timeline
+                  </label>
+                  <select
+                    id="filter-timeline"
+                    value={movingTimeline}
+                    onChange={(e) => setMovingTimeline(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-border bg-ivory text-xs text-charcoal"
+                  >
+                    <option value="all">Any Timeline</option>
+                    {MOVING_TIMELINE_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="filter-sleep" className="block text-[11px] font-medium text-charcoal mb-1">
+                    Sleep Schedule
+                  </label>
+                  <select
+                    id="filter-sleep"
+                    value={sleepSchedule}
+                    onChange={(e) => setSleepSchedule(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-border bg-ivory text-xs text-charcoal"
+                  >
+                    <option value="all">Any Sleep Schedule</option>
+                    <option value="early_bird">Early bird</option>
+                    <option value="balanced">Balanced</option>
+                    <option value="night_owl">Night owl</option>
+                    <option value="flexible_shift">Flexible</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="filter-cleanliness" className="block text-[11px] font-medium text-charcoal mb-1">
+                    Cleanliness Preference
+                  </label>
+                  <select
+                    id="filter-cleanliness"
+                    value={cleanlinessLevel}
+                    onChange={(e) => setCleanlinessLevel(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-border bg-ivory text-xs text-charcoal"
+                  >
+                    <option value="all">Any Cleanliness Level</option>
+                    <option value="spotless">Spotless daily</option>
+                    <option value="tidy_shared_spaces">Tidy shared spaces</option>
+                    <option value="weekly_deep_clean">Weekly deep clean</option>
+                    <option value="relaxed">Relaxed</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="filter-smoking" className="block text-[11px] font-medium text-charcoal mb-1">
+                    Smoking Preference
+                  </label>
+                  <select
+                    id="filter-smoking"
+                    value={smokingPreference}
+                    onChange={(e) => setSmokingPreference(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-border bg-ivory text-xs text-charcoal"
+                  >
+                    <option value="all">Any Smoking Preference</option>
+                    <option value="never">Strictly smoke-free</option>
+                    <option value="outside_only">Outdoors / balcony only</option>
+                    <option value="tolerant">Comfortable around smokers</option>
+                    <option value="occasionally_indoors">Occasional indoor smoker</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Premium Boundaries */}
+            <div className="pt-3 border-t border-border space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-forest">
+                  <Sparkles className="w-3.5 h-3.5 text-terracotta" />
+                  Premium Granular Boundaries (Diet, Pets, WFH, Guests)
+                </span>
+                {!data.isPremiumViewer && (
+                  <Link
+                    href="/pricing"
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-terracotta-dark hover:underline"
+                  >
+                    <Lock className="w-3 h-3" />
+                    Unlock with Premium (₹199/mo)
+                  </Link>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+                <div>
+                  <label className="block text-[11px] text-muted mb-1">Kitchen Dietary Rule</label>
+                  <select
+                    disabled={!data.isPremiumViewer}
+                    value={dietaryPreference}
+                    onChange={(e) => setDietaryPreference(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-border bg-ivory disabled:opacity-50 text-xs text-charcoal"
+                  >
+                    <option value="all">Any Dietary Kitchen</option>
+                    <option value="strict_veg_kitchen">Strictly vegetarian kitchen</option>
+                    <option value="veg_preferred_flexible">Vegetarian (flexible kitchen)</option>
+                    <option value="non_veg_comfortable">Open / non-veg comfortable</option>
+                    <option value="vegan">Plant-based / vegan</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] text-muted mb-1">Pet Preference</label>
+                  <select
+                    disabled={!data.isPremiumViewer}
+                    value={petPreference}
+                    onChange={(e) => setPetPreference(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-border bg-ivory disabled:opacity-50 text-xs text-charcoal"
+                  >
+                    <option value="all">Any Pet Preference</option>
+                    <option value="no_pets">Pet-free home</option>
+                    <option value="love_pets_dont_own">Loves pets</option>
+                    <option value="have_pets">Has a pet</option>
+                    <option value="allergic">Pet allergy (strictly no pets)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] text-muted mb-1">Work / Study Routine</label>
+                  <select
+                    disabled={!data.isPremiumViewer}
+                    value={workStudyRoutine}
+                    onChange={(e) => setWorkStudyRoutine(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-border bg-ivory disabled:opacity-50 text-xs text-charcoal"
+                  >
+                    <option value="all">Any Work Routine</option>
+                    <option value="mostly_office_campus">At office / campus</option>
+                    <option value="hybrid">Hybrid (2–3 days WFH)</option>
+                    <option value="mostly_from_home">Mostly WFH</option>
+                    <option value="late_study_hours">Late study hours</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] text-muted mb-1">Overnight Guests</label>
+                  <select
+                    disabled={!data.isPremiumViewer}
+                    value={guestsOvernight}
+                    onChange={(e) => setGuestsOvernight(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-border bg-ivory disabled:opacity-50 text-xs text-charcoal"
+                  >
+                    <option value="all">Any Guest Policy</option>
+                    <option value="rarely">Rarely hosts</option>
+                    <option value="occasional_with_notice">Occasional with notice</option>
+                    <option value="weekends_welcome">Weekends welcome</option>
+                    <option value="anytime_open">Open-door social</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-2 flex justify-between items-center">
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="text-xs text-muted hover:text-charcoal underline"
+              >
+                Clear all filters
+              </button>
+              <button
+                type="button"
+                onClick={() => applyFilters(1)}
+                className="px-6 py-2 rounded-full bg-forest hover:bg-forest-light text-ivory text-xs font-semibold shadow-xs transition"
+              >
+                Apply All Filters
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Results Area */}
@@ -443,22 +525,22 @@ export function DiscoveryClient({
               return (
                 <div
                   key={prof.id}
-                  className="bg-white border border-border rounded-3xl p-6 shadow-warm flex flex-col justify-between space-y-5"
+                  className="group bg-white/95 backdrop-blur-sm border border-border/80 hover:border-forest/40 rounded-3xl p-6 sm:p-7 shadow-warm hover:shadow-warm-lg transition-all duration-300 flex flex-col justify-between space-y-5 transform hover:-translate-y-1"
                 >
                   <div className="space-y-4">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-2xl bg-sand flex items-center justify-center font-serif text-lg font-semibold text-forest shrink-0">
+                        <div className="w-12 h-12 rounded-full bg-sand/80 ring-2 ring-forest/20 flex items-center justify-center font-serif text-base font-bold text-forest shadow-xs shrink-0 group-hover:scale-105 transition-transform">
                           {getInitials(prof.first_name)}
                         </div>
                         <div>
                           <div className="flex items-center gap-1.5">
-                            <h2 className="font-serif text-xl text-charcoal">
+                            <h2 className="font-serif text-xl text-charcoal group-hover:text-forest transition-colors">
                               {prof.first_name}
                             </h2>
                             {item.isCandidatePremium && (
-                              <span className="px-2 py-0.5 rounded-full bg-sand text-[10px] font-semibold text-forest">
-                                Priority
+                              <span className="px-2 py-0.5 rounded-full bg-terracotta/15 text-[10px] font-semibold text-terracotta-dark border border-terracotta/20">
+                                Priority Sync
                               </span>
                             )}
                           </div>
@@ -490,7 +572,44 @@ export function DiscoveryClient({
                       </p>
                     )}
 
-                    <div className="p-3.5 rounded-2xl bg-ivory border border-border space-y-1.5 text-xs">
+                    {/* Category Breakdown Mini Meters */}
+                    {item.peaceScore.overallScore !== null && (
+                      <div className="grid grid-cols-3 gap-1.5 py-1.5 px-2.5 bg-ivory rounded-xl border border-border/70 text-center text-[10px]">
+                        <div>
+                          <span className="text-muted block">Lifestyle</span>
+                          <span className="font-semibold text-forest">
+                            {item.peaceScore.categories.lifestyle?.score ?? "—"}%
+                          </span>
+                        </div>
+                        <div className="border-x border-border/70">
+                          <span className="text-muted block">Living</span>
+                          <span className="font-semibold text-forest">
+                            {item.peaceScore.categories.living?.score ?? "—"}%
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-muted block">Comm</span>
+                          <span className="font-semibold text-forest">
+                            {item.peaceScore.categories.personality?.score ?? "—"}%
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Deal-Breaker Status Pill */}
+                    {item.peaceScore.hasDealbreakerConflict ? (
+                      <div className="p-2 rounded-xl bg-amber-50 border border-amber-200/80 text-[11px] font-medium text-amber-900 flex items-center gap-1.5">
+                        <span className="text-amber-700">⚠️</span>
+                        <span>Deal-breaker conflict (Score capped at 49%)</span>
+                      </div>
+                    ) : item.peaceScore.overallScore !== null ? (
+                      <div className="p-1.5 rounded-xl bg-emerald-50/60 border border-emerald-200/60 text-[10px] font-medium text-emerald-800 flex items-center gap-1">
+                        <span>✓</span>
+                        <span>Zero deal-breaker conflicts</span>
+                      </div>
+                    ) : null}
+
+                    <div className="p-3.5 rounded-2xl bg-ivory border border-border/70 space-y-1.5 text-xs">
                       <div className="flex justify-between">
                         <span className="text-muted">Monthly Budget:</span>
                         <span className="font-semibold text-charcoal">
@@ -508,7 +627,7 @@ export function DiscoveryClient({
                           {liv.preferred_areas.slice(0, 3).map((a) => (
                             <span
                               key={a}
-                              className="px-2 py-0.5 rounded-full bg-white border border-border text-[11px] text-charcoal"
+                              className="px-2 py-0.5 rounded-full bg-white border border-border/80 text-[11px] text-charcoal"
                             >
                               {a}
                             </span>

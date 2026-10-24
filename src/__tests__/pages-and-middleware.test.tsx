@@ -69,7 +69,7 @@ describe("Public Website Pages, Middleware Route Guards, Mobile Navbar & Onboard
   it("renders all public pages with required content and zero dummy profiles", () => {
     const { unmount: u1 } = render(<LandingPage />);
     expect(screen.getByText(/Somewhere out there is your/i)).toBeDefined();
-    expect(screen.getByTestId("waitlist-form")).toBeDefined();
+    expect(screen.getByRole("link", { name: /Create Your Compatibility Profile/i })).toBeDefined();
     u1();
 
     const { unmount: u2 } = render(<HowItWorksPage />);

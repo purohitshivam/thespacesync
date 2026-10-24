@@ -4,7 +4,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getRazorpayConfigStatus } from "@/lib/env";
 import { evaluateSubscriptionEntitlements } from "@/lib/entitlements";
 import { PricingActions } from "@/components/pricing/PricingActions";
-import { Check, Minus, ShieldCheck, Sparkles } from "lucide-react";
+import { Check, Minus, ShieldCheck, Sparkles, Zap, Clock, HeartHandshake } from "lucide-react";
 
 export const metadata = {
   title: "Pricing — Free & ₹199/month Premium",
@@ -149,10 +149,11 @@ export default async function PricingPage() {
         </div>
 
         {/* Premium Card */}
-        <div className="bg-white border-2 border-forest rounded-3xl p-8 shadow-warm-lg flex flex-col justify-between space-y-8 relative">
-          <span className="absolute -top-3.5 right-8 px-3.5 py-1 rounded-full bg-forest text-ivory text-xs font-semibold">
-            ₹199 / month
-          </span>
+        <div className="relative bg-white border-2 border-forest rounded-3xl p-8 sm:p-9 shadow-[0_20px_50px_-12px_rgba(26,54,42,0.18)] flex flex-col justify-between space-y-8 ring-1 ring-forest/30">
+          <div className="absolute -top-3.5 right-6 sm:right-8 inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-forest text-ivory text-xs font-semibold shadow-sm">
+            <Sparkles className="w-3.5 h-3.5 text-sand" />
+            <span>Most Popular for Active Seekers</span>
+          </div>
 
           <div className="space-y-4">
             <div className="flex items-baseline justify-between">
@@ -169,30 +170,30 @@ export default async function PricingPage() {
             </div>
 
             <p className="text-sm text-muted leading-relaxed">
-              Built for relocations with specific kitchen, pet, guest, or work-from-home criteria.
+              Designed for relocations where kitchen rules, pet boundaries, WFH quiet hours, and tight move-in schedules are non-negotiable.
             </p>
 
-            <ul className="space-y-3 text-sm text-charcoal pt-3 border-t border-border">
-              <li className="flex items-center gap-2.5">
-                <Check className="w-4 h-4 text-terracotta shrink-0" />
+            <ul className="space-y-3.5 text-sm text-charcoal pt-4 border-t border-border">
+              <li className="flex items-start gap-2.5 font-medium">
+                <Check className="w-4 h-4 text-terracotta shrink-0 mt-0.5" />
                 <span>Everything in SpaceSync Core</span>
               </li>
-              <li className="flex items-center gap-2.5">
-                <Check className="w-4 h-4 text-terracotta shrink-0" />
+              <li className="flex items-start gap-2.5">
+                <Check className="w-4 h-4 text-terracotta shrink-0 mt-0.5" />
                 <span>
-                  <strong>Advanced Discovery Filters:</strong> Filter by dietary kitchen rules, pet preferences, WFH routine, and overnight guest policy
+                  <strong>Advanced Lifestyle Filters:</strong> Filter specifically by vegetarian kitchen rules, pet habits, hybrid/WFH routine, and overnight guest policy
                 </span>
               </li>
-              <li className="flex items-center gap-2.5">
-                <Check className="w-4 h-4 text-terracotta shrink-0" />
+              <li className="flex items-start gap-2.5">
+                <Check className="w-4 h-4 text-terracotta shrink-0 mt-0.5" />
                 <span>
-                  <strong>Deeper Compatibility Insights:</strong> Side-by-side answer comparison across every scored Peace Score question
+                  <strong>Deeper Compatibility Insights:</strong> Side-by-side answer breakdown across every scored lifestyle boundary
                 </span>
               </li>
-              <li className="flex items-center gap-2.5">
-                <Check className="w-4 h-4 text-terracotta shrink-0" />
+              <li className="flex items-start gap-2.5">
+                <Check className="w-4 h-4 text-terracotta shrink-0 mt-0.5" />
                 <span>
-                  <strong>Priority Visibility:</strong> Highlighted badge in discovery results
+                  <strong>Priority Candidate Visibility:</strong> Highlighted seeker badge across discovery rankings
                 </span>
               </li>
             </ul>
@@ -206,6 +207,49 @@ export default async function PricingPage() {
             razorpayConfigured={razorpayStatus.isConfigured}
             missingRazorpayVars={razorpayStatus.missingVars}
           />
+        </div>
+      </div>
+
+      {/* Trust & Guarantee Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="p-5 rounded-2xl bg-white border border-border shadow-warm space-y-2">
+          <div className="w-8 h-8 rounded-xl bg-forest/10 flex items-center justify-center text-forest">
+            <ShieldCheck className="w-4 h-4" />
+          </div>
+          <h3 className="font-serif text-sm font-semibold text-charcoal">Bank-Grade Security</h3>
+          <p className="text-xs text-muted leading-relaxed">
+            Razorpay 256-bit encrypted checkout with server-side HMAC-SHA256 signature verification.
+          </p>
+        </div>
+
+        <div className="p-5 rounded-2xl bg-white border border-border shadow-warm space-y-2">
+          <div className="w-8 h-8 rounded-xl bg-forest/10 flex items-center justify-center text-forest">
+            <Clock className="w-4 h-4" />
+          </div>
+          <h3 className="font-serif text-sm font-semibold text-charcoal">1-Click Cancellation</h3>
+          <p className="text-xs text-muted leading-relaxed">
+            Cancel subscription renewal anytime directly from your settings with zero phone calls or hassles.
+          </p>
+        </div>
+
+        <div className="p-5 rounded-2xl bg-white border border-border shadow-warm space-y-2">
+          <div className="w-8 h-8 rounded-xl bg-forest/10 flex items-center justify-center text-forest">
+            <HeartHandshake className="w-4 h-4" />
+          </div>
+          <h3 className="font-serif text-sm font-semibold text-charcoal">100% Zero-Brokerage</h3>
+          <p className="text-xs text-muted leading-relaxed">
+            Direct peer-to-peer flatmate matching only. Strictly zero brokers, listing agents, or commissions.
+          </p>
+        </div>
+
+        <div className="p-5 rounded-2xl bg-white border border-border shadow-warm space-y-2">
+          <div className="w-8 h-8 rounded-xl bg-forest/10 flex items-center justify-center text-forest">
+            <Zap className="w-4 h-4" />
+          </div>
+          <h3 className="font-serif text-sm font-semibold text-charcoal">Instant Entitlement</h3>
+          <p className="text-xs text-muted leading-relaxed">
+            Advanced filters and side-by-side breakdown activate the moment your payment is confirmed.
+          </p>
         </div>
       </div>
 

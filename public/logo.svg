@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 80" width="340" height="80" fill="none">
+  <!-- Forest Green Orbital Circle -->
+  <circle cx="38" cy="42" r="34" fill="#30483A" />
+  <!-- Warm Ivory Editorial Serif 'S' -->
+  <text
+    x="38"
+    y="54"
+    text-anchor="middle"
+    fill="#FAF7F1"
+    font-family="'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif"
+    font-size="38"
+    font-weight="600"
+  >S</text>
+  <!-- Terracotta Orbital Satellite Dot with Warm Ivory Cutout Border -->
+  <circle cx="64" cy="16" r="9" fill="#C77D61" stroke="#FAF7F1" stroke-width="3" />
+  <!-- Wordmark: SpaceSync -->
+  <text
+    x="92"
+    y="44"
+    fill="#302F2B"
+    font-family="'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif"
+    font-size="36"
+    font-weight="600"
+    letter-spacing="-0.02em"
+  >SpaceSync</text>
+  <!-- Descriptor: PEACEFUL FLATSHARING -->
+  <text
+    x="93"
+    y="66"
+    fill="#77756D"
+    font-family="'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+    font-size="14"
+    font-weight="600"
+    letter-spacing="0.12em"
+  >PEACEFUL FLATSHARING</text>
+</svg>

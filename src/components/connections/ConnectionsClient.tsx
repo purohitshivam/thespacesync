@@ -13,6 +13,7 @@ import {
   MapPin,
   ArrowUpRight,
   AlertCircle,
+  Sparkles,
 } from "lucide-react";
 
 export interface ConnectionCardItem {
@@ -149,20 +150,30 @@ export function ConnectionsClient({
           {currentItems.map((item) => (
             <div
               key={item.id}
-              className="bg-white border border-border rounded-3xl p-6 shadow-warm flex flex-col justify-between space-y-4"
+              className="group bg-white/95 backdrop-blur-sm border border-border/80 hover:border-forest/40 rounded-3xl p-6 sm:p-7 shadow-warm hover:shadow-warm-lg transition-all duration-300 flex flex-col justify-between space-y-4 transform hover:-translate-y-1"
             >
-              <div className="space-y-3">
+              <div className="space-y-4">
+                {activeTab === "matches" && (
+                  <div className="bg-forest/10 border border-forest/20 rounded-2xl px-3.5 py-2 flex items-center justify-between text-xs text-forest font-semibold">
+                    <span className="flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-terracotta" />
+                      Mutual Sanctuary Handshake
+                    </span>
+                    <span className="text-[11px] font-medium text-forest/80">Direct Chat Unlocked</span>
+                  </div>
+                )}
+
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-sand flex items-center justify-center font-serif text-lg font-semibold text-forest shrink-0">
+                    <div className="w-12 h-12 rounded-2xl bg-sand/80 border border-border text-forest font-serif text-lg font-bold flex items-center justify-center shrink-0 group-hover:border-forest/30 transition-colors">
                       {getInitials(item.otherFirstName)}
                     </div>
                     <div>
-                      <h2 className="font-serif text-xl text-charcoal">
+                      <h2 className="font-serif text-xl text-charcoal group-hover:text-forest transition-colors">
                         {item.otherFirstName}
                       </h2>
-                      <p className="text-xs text-muted flex items-center gap-1">
-                        <MapPin className="w-3 h-3 text-terracotta" />
+                      <p className="text-xs text-muted flex items-center gap-1 mt-0.5">
+                        <MapPin className="w-3 h-3 text-terracotta shrink-0" />
                         {item.otherCity}
                         {item.otherOccupation ? ` · ${item.otherOccupation}` : ""}
                       </p>
@@ -170,14 +181,22 @@ export function ConnectionsClient({
                   </div>
 
                   {item.peaceScoreSnapshot !== null && (
-                    <span className="px-3 py-1 rounded-full bg-sand text-forest text-xs font-semibold">
-                      Peace Score: {item.peaceScoreSnapshot}%
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        item.peaceScoreSnapshot >= 90
+                          ? "bg-forest/10 text-forest border border-forest/20"
+                          : item.peaceScoreSnapshot >= 75
+                            ? "bg-sand text-charcoal border border-sand-dark"
+                            : "bg-terracotta/10 text-terracotta-dark border border-terracotta/20"
+                      }`}
+                    >
+                      {item.peaceScoreSnapshot}% Peace
                     </span>
                   )}
                 </div>
 
                 {item.introNote && (
-                  <div className="p-3.5 rounded-2xl bg-ivory border border-border text-xs text-charcoal italic">
+                  <div className="p-3.5 rounded-2xl bg-ivory border border-border text-xs text-charcoal italic leading-relaxed">
                     &ldquo;{item.introNote}&rdquo;
                   </div>
                 )}

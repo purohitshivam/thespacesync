@@ -15,6 +15,8 @@ import {
   RefreshCw,
   Flag,
   Ban,
+  Sparkles,
+  ArrowUpRight,
 } from "lucide-react";
 
 interface ChatRoomClientProps {
@@ -212,24 +214,29 @@ export function ChatRoomClient({
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
-          <div className="w-10 h-10 rounded-2xl bg-sand flex items-center justify-center font-serif font-semibold text-forest">
+          <div className="w-10 h-10 rounded-2xl bg-forest/10 border border-forest/20 flex items-center justify-center font-serif font-bold text-forest text-base">
             {getInitials(otherFirstName)}
           </div>
           <div>
             <div className="flex items-center gap-2">
               <Link
                 href={`/discover/${otherUserId}`}
-                className="font-serif text-lg text-charcoal hover:underline"
+                className="font-serif text-lg text-charcoal hover:underline flex items-center gap-1 font-semibold"
               >
-                {otherFirstName}
+                <span>{otherFirstName}</span>
+                <ArrowUpRight className="w-3.5 h-3.5 text-muted hover:text-forest" />
               </Link>
               {peaceScoreAtMatch !== null && (
-                <span className="px-2.5 py-0.5 rounded-full bg-sand text-forest text-[11px] font-semibold">
-                  Peace Score: {peaceScoreAtMatch}%
+                <span className="px-2.5 py-0.5 rounded-full bg-forest/10 text-forest text-[11px] font-semibold border border-forest/20">
+                  {peaceScoreAtMatch}% Peace
                 </span>
               )}
             </div>
-            <p className="text-xs text-muted">{otherCity}</p>
+            <p className="text-xs text-muted flex items-center gap-1">
+              <span>{otherCity}</span>
+              <span>·</span>
+              <span className="text-forest font-medium">Direct Chat Unlocked</span>
+            </p>
           </div>
         </div>
 
@@ -300,13 +307,54 @@ export function ChatRoomClient({
       {/* Message Stream */}
       <div className="flex-1 bg-white border border-border rounded-3xl p-4 sm:p-6 overflow-y-auto space-y-4 shadow-warm">
         {messages.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-center p-6 text-muted space-y-2">
-            <p className="font-serif text-lg text-charcoal">
-              Start the conversation with {otherFirstName}
-            </p>
-            <p className="text-xs max-w-md leading-relaxed">
-              This conversation is empty because neither of you has sent a message yet. Introduce yourself and discuss your preferred neighbourhoods, move-in timeline, or house norms.
-            </p>
+          <div className="h-full flex flex-col items-center justify-center text-center p-6 text-muted space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-forest/10 flex items-center justify-center text-forest">
+              <Sparkles className="w-6 h-6 text-terracotta" />
+            </div>
+            <div>
+              <p className="font-serif text-xl text-charcoal">
+                Start the conversation with {otherFirstName}
+              </p>
+              <p className="text-xs max-w-md leading-relaxed text-muted mt-1">
+                You matched with a {peaceScoreAtMatch ? `${peaceScoreAtMatch}% Peace Score` : "high compatibility score"}. Send a friendly hello or tap a starter below to kick things off:
+              </p>
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-2 max-w-md pt-2">
+              <button
+                type="button"
+                onClick={() =>
+                  setDraft(
+                    `Hi ${otherFirstName}! I noticed we matched on SpaceSync. What areas or neighbourhoods are you currently exploring?`
+                  )
+                }
+                className="px-3.5 py-2 rounded-full border border-border bg-ivory hover:bg-sand text-xs text-charcoal font-medium transition text-left"
+              >
+                📍 Ask about preferred areas
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setDraft(
+                    `Hey ${otherFirstName}! When are you looking to move in, and what's your ideal 11-month lease timeframe?`
+                  )
+                }
+                className="px-3.5 py-2 rounded-full border border-border bg-ivory hover:bg-sand text-xs text-charcoal font-medium transition text-left"
+              >
+                🗓️ Ask about move-in timeline
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setDraft(
+                    `Hey ${otherFirstName}! Are you working from home or going into an office/campus on weekdays?`
+                  )
+                }
+                className="px-3.5 py-2 rounded-full border border-border bg-ivory hover:bg-sand text-xs text-charcoal font-medium transition text-left"
+              >
+                💼 Ask about WFH / routine
+              </button>
+            </div>
           </div>
         ) : (
           messages.map((msg) => {

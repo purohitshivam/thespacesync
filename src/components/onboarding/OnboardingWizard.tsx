@@ -30,6 +30,7 @@ import {
   AlertCircle,
   ArrowLeft,
   ArrowRight,
+  Check,
   CheckCircle2,
   Upload,
   ShieldCheck,
@@ -348,17 +349,23 @@ export function OnboardingWizard({ userId, initialData }: OnboardingWizardProps)
   return (
     <div className="space-y-8" data-testid="onboarding-wizard">
       {/* Progress Header */}
-      <div className="bg-white border border-border rounded-3xl p-6 shadow-warm space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <div className="bg-white border border-border rounded-3xl p-6 sm:p-7 shadow-warm space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-forest">
-              Step {step} of 6 · {stepsMeta[step - 1]?.title}
-            </span>
-            <h1 className="font-serif text-2xl sm:text-3xl text-charcoal mt-0.5">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-forest">
+                Step {step} of 6
+              </span>
+              <span className="text-muted text-xs">·</span>
+              <span className="text-xs font-medium text-charcoal">
+                {stepsMeta[step - 1]?.title}
+              </span>
+            </div>
+            <h1 className="font-serif text-2xl sm:text-3xl text-charcoal mt-1">
               Build Your Compatibility Profile
             </h1>
           </div>
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ivory border border-border text-xs font-medium text-charcoal">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ivory border border-border text-xs font-medium text-charcoal self-start sm:self-auto">
             {isPublished ? (
               <>
                 <Eye className="w-3.5 h-3.5 text-forest" />
@@ -373,33 +380,56 @@ export function OnboardingWizard({ userId, initialData }: OnboardingWizardProps)
           </div>
         </div>
 
-        {/* Step Indicator Pills */}
-        <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 pt-1">
-          {stepsMeta.map((s) => (
-            <button
-              key={s.num}
-              type="button"
-              onClick={() => {
-                if (s.num < step) setStep(s.num);
-              }}
-              className={`px-3 py-2 rounded-xl text-left text-xs font-medium border transition ${
-                s.num === step
-                  ? "bg-forest text-ivory border-forest"
-                  : s.num < step
-                    ? "bg-sand text-charcoal border-border hover:bg-sand-dark"
-                    : "bg-ivory text-muted border-border cursor-default"
-              }`}
-            >
-              <span className="block text-[10px] opacity-75">0{s.num}</span>
-              <span className="truncate block">{s.title}</span>
-            </button>
-          ))}
+        {/* Dynamic Progress Bar */}
+        <div className="space-y-1.5">
+          <div className="flex justify-between items-center text-[11px] text-muted font-medium">
+            <span>Overall Profile Progress</span>
+            <span className="font-semibold text-charcoal">{Math.round((step / 6) * 100)}% Completed</span>
+          </div>
+          <div className="h-2 w-full bg-sand rounded-full overflow-hidden">
+            <div
+              className="h-full bg-forest transition-all duration-500 ease-out rounded-full"
+              style={{ width: `${Math.round((step / 6) * 100)}%` }}
+            />
+          </div>
         </div>
 
-        <div className="flex items-start gap-2 text-xs text-muted bg-ivory p-3 rounded-2xl border border-border">
+        {/* Step Indicator Pills */}
+        <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 pt-1">
+          {stepsMeta.map((s) => {
+            const isCurrent = s.num === step;
+            const isPast = s.num < step;
+            return (
+              <button
+                key={s.num}
+                type="button"
+                onClick={() => {
+                  if (s.num < step) setStep(s.num);
+                }}
+                className={`px-3 py-2.5 rounded-2xl text-left text-xs font-medium border transition-all duration-200 ${
+                  isCurrent
+                    ? "bg-forest text-ivory border-forest shadow-sm"
+                    : isPast
+                      ? "bg-sand/60 text-charcoal border-border hover:bg-sand hover:border-forest/40"
+                      : "bg-ivory text-muted/80 border-border/80 cursor-default"
+                }`}
+              >
+                <div className="flex items-center justify-between mb-0.5">
+                  <span className={`text-[10px] font-semibold ${isCurrent ? "text-ivory/80" : "text-muted"}`}>
+                    0{s.num}
+                  </span>
+                  {isPast && <Check className="w-3 h-3 text-forest shrink-0" />}
+                </div>
+                <span className="truncate block font-semibold">{s.title}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="flex items-start gap-2.5 text-xs text-muted bg-ivory p-3.5 rounded-2xl border border-border">
           <Info className="w-4 h-4 text-forest shrink-0 mt-0.5" />
           <span>
-            <strong>How your answers are used:</strong> Every answer is compared deterministically with other published flatmates in your city to compute your Peace Score. Optional questions can be skipped—unanswered questions are excluded from the denominator rather than penalised.
+            <strong>Deterministic Peace Score:</strong> Your answers are compared mathematically against verified flatmates in your city. Optional questions can be skipped without penalty.
           </span>
         </div>
       </div>
@@ -661,16 +691,33 @@ export function OnboardingWizard({ userId, initialData }: OnboardingWizardProps)
                         onClick={() =>
                           setLifestyle((prev) => ({ ...prev, [q.key]: opt.value }))
                         }
-                        className={`p-3.5 rounded-2xl border text-left transition ${
+                        className={`p-4 rounded-2xl border text-left transition-all duration-200 ${
                           selected
-                            ? "border-forest bg-sand/70 shadow-sm"
-                            : "border-border bg-ivory hover:bg-sand/30"
+                            ? "border-forest bg-forest/[0.04] shadow-sm ring-1 ring-forest/30"
+                            : "border-border bg-ivory/80 hover:bg-sand/40 hover:border-forest/30"
                         }`}
                       >
-                        <p className="text-xs font-semibold text-charcoal">{opt.label}</p>
-                        {opt.hint && (
-                          <p className="text-[11px] text-muted mt-0.5">{opt.hint}</p>
-                        )}
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1">
+                            <p className="text-xs font-semibold text-charcoal">{opt.label}</p>
+                            {opt.hint && (
+                              <p className="text-[11px] text-muted mt-1 leading-relaxed">{opt.hint}</p>
+                            )}
+                          </div>
+                          <div
+                            className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 mt-0.5 transition-all ${
+                              selected
+                                ? "border-forest bg-forest text-ivory shadow-xs"
+                                : "border-border bg-white"
+                            }`}
+                          >
+                            {selected ? (
+                              <Check className="w-3 h-3 stroke-[3]" />
+                            ) : (
+                              <div className="w-1.5 h-1.5 rounded-full bg-border" />
+                            )}
+                          </div>
+                        </div>
                       </button>
                     );
                   })}
@@ -734,16 +781,33 @@ export function OnboardingWizard({ userId, initialData }: OnboardingWizardProps)
                         onClick={() =>
                           setPersonality((prev) => ({ ...prev, [q.key]: opt.value }))
                         }
-                        className={`p-3.5 rounded-2xl border text-left transition ${
+                        className={`p-4 rounded-2xl border text-left transition-all duration-200 ${
                           selected
-                            ? "border-forest bg-sand/70 shadow-sm"
-                            : "border-border bg-ivory hover:bg-sand/30"
+                            ? "border-forest bg-forest/[0.04] shadow-sm ring-1 ring-forest/30"
+                            : "border-border bg-ivory/80 hover:bg-sand/40 hover:border-forest/30"
                         }`}
                       >
-                        <p className="text-xs font-semibold text-charcoal">{opt.label}</p>
-                        {opt.hint && (
-                          <p className="text-[11px] text-muted mt-0.5">{opt.hint}</p>
-                        )}
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1">
+                            <p className="text-xs font-semibold text-charcoal">{opt.label}</p>
+                            {opt.hint && (
+                              <p className="text-[11px] text-muted mt-1 leading-relaxed">{opt.hint}</p>
+                            )}
+                          </div>
+                          <div
+                            className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 mt-0.5 transition-all ${
+                              selected
+                                ? "border-forest bg-forest text-ivory shadow-xs"
+                                : "border-border bg-white"
+                            }`}
+                          >
+                            {selected ? (
+                              <Check className="w-3 h-3 stroke-[3]" />
+                            ) : (
+                              <div className="w-1.5 h-1.5 rounded-full bg-border" />
+                            )}
+                          </div>
+                        </div>
                       </button>
                     );
                   })}
@@ -991,7 +1055,13 @@ export function OnboardingWizard({ userId, initialData }: OnboardingWizardProps)
                       </button>
                     ))}
 
-                    <label className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-border bg-ivory text-xs cursor-pointer ml-1">
+                    <label
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs cursor-pointer ml-1 transition-all ${
+                        current.is_dealbreaker
+                          ? "border-terracotta bg-terracotta/15 text-terracotta-dark font-semibold ring-1 ring-terracotta/30"
+                          : "border-border bg-ivory text-muted hover:text-charcoal hover:border-terracotta/50"
+                      }`}
+                    >
                       <input
                         type="checkbox"
                         checked={current.is_dealbreaker}
@@ -1001,9 +1071,9 @@ export function OnboardingWizard({ userId, initialData }: OnboardingWizardProps)
                             [q.key]: { ...current, is_dealbreaker: e.target.checked },
                           }))
                         }
-                        className="rounded border-border text-terracotta"
+                        className="rounded border-border text-terracotta accent-terracotta"
                       />
-                      <span className="text-terracotta-dark font-medium">Deal-breaker</span>
+                      <span>Strict Deal-breaker</span>
                     </label>
                   </div>
                 </div>

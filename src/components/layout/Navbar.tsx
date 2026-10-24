@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -15,6 +15,7 @@ import {
   X,
   LogOut,
   Sparkles,
+  ArrowRight,
 } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
@@ -31,6 +32,13 @@ export function Navbar({ user }: { user: NavbarUser | null }) {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 15);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const publicLinks = [
     { href: "/how-it-works", label: "How It Works" },
@@ -66,27 +74,36 @@ export function Navbar({ user }: { user: NavbarUser | null }) {
   }
 
   return (
-    <header className="sticky top-0 z-40 bg-ivory/95 backdrop-blur-md border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-        {/* Brand Logo */}
-        <Link
-          href="/"
-          className="flex items-center gap-2.5 group focus:outline-none"
-          aria-label="SpaceSync Home"
-        >
-          <div className="w-9 h-9 rounded-full bg-forest flex items-center justify-center text-ivory relative shadow-sm">
-            <span className="font-serif font-semibold text-base tracking-tight">S</span>
-            <span className="w-2 h-2 rounded-full bg-terracotta absolute -top-0.5 -right-0.5 border border-ivory" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-serif text-xl font-semibold text-charcoal tracking-tight leading-none">
-              SpaceSync
-            </span>
-            <span className="text-[10px] text-muted tracking-wider uppercase mt-0.5">
-              Peaceful Flatsharing
-            </span>
-          </div>
-        </Link>
+    <>
+      <header
+        className={`sticky top-0 z-40 transition-all duration-300 border-b ${
+          scrolled
+            ? "bg-ivory/85 backdrop-blur-xl shadow-warm border-sand-dark/70"
+            : "bg-ivory/95 backdrop-blur-md border-border"
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+          {/* Brand Logo */}
+          <Link
+            href="/"
+            className="flex items-center gap-2.5 group focus:outline-none"
+            aria-label="SpaceSync Home"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo-mark.svg"
+              alt="SpaceSync logo mark"
+              className="w-8 h-8 rounded-full shadow-xs group-hover:scale-105 transition-transform duration-200"
+            />
+            <div className="flex flex-col">
+              <span className="font-serif text-xl font-semibold text-charcoal tracking-tight leading-none group-hover:text-forest transition-colors">
+                SpaceSync
+              </span>
+              <span className="text-[10px] text-muted tracking-wider uppercase mt-0.5">
+                Peaceful Flatsharing
+              </span>
+            </div>
+          </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-1 lg:gap-2" aria-label="Main Navigation">
@@ -266,5 +283,28 @@ export function Navbar({ user }: { user: NavbarUser | null }) {
         </div>
       )}
     </header>
+
+      {/* Mobile Floating Bottom Action Pill (for guests) */}
+      {!user && (
+        <aside
+          aria-label="Quick Signup"
+          className="md:hidden fixed bottom-4 inset-x-4 z-40 animate-fade-in pointer-events-none"
+        >
+          <div className="pointer-events-auto bg-charcoal/95 backdrop-blur-xl text-ivory rounded-full p-2 pl-4 pr-2 flex items-center justify-between shadow-warm-lg border border-white/10">
+            <div className="flex flex-col">
+              <span className="text-xs font-semibold text-ivory">Find Your Flatmate</span>
+              <span className="text-[10px] text-ivory/70">100% Free · Bangalore, Mumbai, Delhi</span>
+            </div>
+            <Link
+              href="/signup"
+              className="px-4 py-2 rounded-full bg-forest-light hover:bg-forest text-ivory text-xs font-semibold shadow-sm flex items-center gap-1.5 transition transform active:scale-95"
+            >
+              <span>Get Started</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </aside>
+      )}
+    </>
   );
 }
