@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   },
   description:
     "SpaceSync helps students, MBA cohorts, and young professionals across Bangalore, Mumbai, and Delhi NCR find compatible people to live with through the transparent, rules-based Peace Score.",
+  verification: {
+    google: "SKSamSvWVCc2SDWole7W_1XOZ4EFU0LNUZdT7vBE-tw",
+  },
 };
 
 export default async function RootLayout({
