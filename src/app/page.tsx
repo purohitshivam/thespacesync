@@ -1,9 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import {
-  OrbitalIllustration,
-  PeaceScoreArchitectureDiagram,
-} from "@/components/ui/OrbitalGraphics";
+import { PeaceScoreArchitectureDiagram } from "@/components/ui/OrbitalGraphics";
+import { HeroMatchCard } from "@/components/ui/HeroMatchCard";
 import { WaitlistForm } from "@/components/waitlist/WaitlistForm";
 import {
   Sparkles,
@@ -16,6 +14,9 @@ import {
   Lock,
   Scale,
   HeartHandshake,
+  Clock,
+  Utensils,
+  MessageCircle,
 } from "lucide-react";
 
 export default function LandingPage() {
@@ -72,23 +73,8 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="lg:col-span-5 flex flex-col items-center">
-            <div className="bg-white border border-border rounded-3xl p-8 shadow-warm-lg w-full max-w-md text-center space-y-5">
-              <div className="flex justify-center">
-                <OrbitalIllustration className="w-56 h-56" />
-              </div>
-              <div className="space-y-2">
-                <span className="text-[11px] uppercase tracking-wider font-semibold text-terracotta">
-                  Architectural Concept Illustration
-                </span>
-                <h2 className="font-serif text-xl text-charcoal">
-                  Built for Domestic Harmony
-                </h2>
-                <p className="text-xs text-muted leading-relaxed">
-                  Whether you already have a 2BHK/3BHK and need a flatmate, or want to team up and hunt for an apartment together, SpaceSync aligns daily rhythms before you sign a lease.
-                </p>
-              </div>
-            </div>
+          <div className="lg:col-span-5 flex flex-col items-center justify-center">
+            <HeroMatchCard />
           </div>
         </div>
       </section>
@@ -108,40 +94,76 @@ export default function LandingPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white border border-border rounded-3xl p-7 shadow-warm space-y-3">
-            <div className="w-10 h-10 rounded-2xl bg-sand flex items-center justify-center text-forest font-serif font-semibold">
-              01
+          <div className="group bg-white/90 backdrop-blur-sm border border-border/80 hover:border-forest/40 rounded-3xl p-7 shadow-warm hover:shadow-warm-lg transition-all duration-300 flex flex-col justify-between space-y-5">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="w-11 h-11 rounded-2xl bg-sand/80 flex items-center justify-center text-forest group-hover:scale-105 transition">
+                  <Clock className="w-5 h-5 text-forest" />
+                </div>
+                <span className="text-[11px] font-semibold tracking-wider uppercase text-muted bg-sand/50 px-2.5 py-1 rounded-full border border-border/60">
+                  Friction #1
+                </span>
+              </div>
+              <h3 className="font-serif text-xl text-charcoal">
+                Unaligned Daily Rhythms
+              </h3>
+              <p className="text-sm text-muted leading-relaxed">
+                Early-morning commuters and late-night coders can live together peacefully — but only when quiet hours, alarm routines, and WFH call zones are clear upfront.
+              </p>
             </div>
-            <h3 className="font-serif text-xl text-charcoal">
-              Unaligned Daily Rhythms
-            </h3>
-            <p className="text-sm text-muted leading-relaxed">
-              Early-morning commuters and late-night coders can live together peacefully — but only when quiet hours, alarm routines, and WFH call zones are clear upfront.
-            </p>
+            <div className="pt-3 border-t border-border/60">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-ivory text-[11px] font-medium text-forest border border-border/60">
+                <span>🌙 Quiet Hours: 11 PM vs 2 AM clash</span>
+              </div>
+            </div>
           </div>
 
-          <div className="bg-white border border-border rounded-3xl p-7 shadow-warm space-y-3">
-            <div className="w-10 h-10 rounded-2xl bg-sand flex items-center justify-center text-forest font-serif font-semibold">
-              02
+          <div className="group bg-white/90 backdrop-blur-sm border border-border/80 hover:border-terracotta/40 rounded-3xl p-7 shadow-warm hover:shadow-warm-lg transition-all duration-300 flex flex-col justify-between space-y-5">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="w-11 h-11 rounded-2xl bg-terracotta/15 flex items-center justify-center text-terracotta group-hover:scale-105 transition">
+                  <Utensils className="w-5 h-5 text-terracotta-dark" />
+                </div>
+                <span className="text-[11px] font-semibold tracking-wider uppercase text-terracotta bg-terracotta/10 px-2.5 py-1 rounded-full border border-terracotta/20">
+                  Deal-Breaker
+                </span>
+              </div>
+              <h3 className="font-serif text-xl text-charcoal">
+                Kitchen, Guests & Upkeep
+              </h3>
+              <p className="text-sm text-muted leading-relaxed">
+                From strictly vegetarian utensils and shared househelp budgets to weekend overnight visitors, surfacing non-negotiables early prevents awkward conversations later.
+              </p>
             </div>
-            <h3 className="font-serif text-xl text-charcoal">
-              Kitchen, Guests & Upkeep
-            </h3>
-            <p className="text-sm text-muted leading-relaxed">
-              From strictly vegetarian utensils and shared househelp budgets to weekend overnight visitors, surfacing non-negotiables early prevents awkward conversations later.
-            </p>
+            <div className="pt-3 border-t border-border/60">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-ivory text-[11px] font-medium text-terracotta-dark border border-border/60">
+                <span>🥗 Veg Kitchen & Shared Cleaning</span>
+              </div>
+            </div>
           </div>
 
-          <div className="bg-white border border-border rounded-3xl p-7 shadow-warm space-y-3">
-            <div className="w-10 h-10 rounded-2xl bg-sand flex items-center justify-center text-forest font-serif font-semibold">
-              03
+          <div className="group bg-white/90 backdrop-blur-sm border border-border/80 hover:border-sage-dark/40 rounded-3xl p-7 shadow-warm hover:shadow-warm-lg transition-all duration-300 flex flex-col justify-between space-y-5">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="w-11 h-11 rounded-2xl bg-sage/20 flex items-center justify-center text-sage-dark group-hover:scale-105 transition">
+                  <MessageCircle className="w-5 h-5 text-sage-dark" />
+                </div>
+                <span className="text-[11px] font-semibold tracking-wider uppercase text-muted bg-sand/50 px-2.5 py-1 rounded-full border border-border/60">
+                  Friction #3
+                </span>
+              </div>
+              <h3 className="font-serif text-xl text-charcoal">
+                Communication Styles
+              </h3>
+              <p className="text-sm text-muted leading-relaxed">
+                Some people prefer direct in-the-moment feedback; others prefer a polite WhatsApp message first. Knowing how your flatmate communicates keeps home calm.
+              </p>
             </div>
-            <h3 className="font-serif text-xl text-charcoal">
-              Communication Styles
-            </h3>
-            <p className="text-sm text-muted leading-relaxed">
-              Some people prefer direct in-the-moment feedback; others prefer a polite WhatsApp message first. Knowing how your flatmate communicates keeps home calm.
-            </p>
+            <div className="pt-3 border-t border-border/60">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-ivory text-[11px] font-medium text-charcoal border border-border/60">
+                <span>💬 Spoken feedback vs Text notice</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>

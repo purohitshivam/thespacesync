@@ -5,6 +5,7 @@ import { Footer } from "@/components/layout/Footer";
 import { getCurrentNavbarUser } from "@/lib/auth/session";
 import Script from "next/script";
 
+
 export const metadata: Metadata = {
   title: {
     default: "SpaceSync — Somewhere out there is your perfect flatmate.",
